@@ -1,0 +1,133 @@
+---
+title: "Untitled"
+output: html_document
+date: "2024-09-04"
+---
+
+
+```{r}
+class1survey<- read.csv("C:\\Users\\Eileen\\Downloads\\Class 1 Survey Fall 2024_di.csv")
+```
+
+2. Determine: a. the number of observations (i.e. the number of people who filled out the survey) and b. the number of variables in the dataframe.
+
+a. There are 29 observations
+b. 27 variables
+
+
+3. a. Rename the column variables to something shorter and that is descriptive of what the variable is about (for example like_dogs for the ‘Do you like dogs?’ question variable) and b. Display that they are renamed.
+
+```{r}
+names(class1survey)[1:27]<-c("id", "like_cats", "like_dogs", "have_desert", "slogan",
+"fav_day", "larkORowl", "fav_food", "fav_drink", "fav_season", "fav_month", "hobby",
+"program", "specialization", "stat_software", "R_exp", "coding_comfort", "coding_length",
+"top_three","public_health_interest", "fav_num", "bday", "bmonth", "country", "state",
+"city", "highest_educ_level")
+
+colnames(class1survey)
+```
+
+4. Write code to determine and display the number of factor, integer, numerical, and character variables there are in the C1survey dataset.
+
+```{r}
+table(sapply(class1survey,class))
+```
+5. a. Using code, check the bday and bmonth variables for any unusual or missing values. If you find any, b. describe what you will do with the unusual values in a comment before or immediately following the code that does it, and 
+
+c. after you have cleaned up any unusual values, find the median bday and month. *Note: please make sure that your bday and month variables are numeric before doing statistics
+
+
+For bday
+- median - 14.00
+- mean - 14.07
+
+For bmonth
+- median - 7.00
+- mean - 6.45
+
+```{r}
+class1survey$bday
+class1survey$bmonth
+```
+
+```{r}
+class(class1survey$bday)
+class1survey$bday<-ifelse(class1survey$bday == "March 31st","31", class1survey$bday)
+class1survey$bday<-ifelse(class1survey$bday == "May 21-report 21","21",class1survey$bday)
+
+class(class1survey$bmonth)
+class1survey$bmonth<-ifelse(class1survey$bmonth == "March","3", class1survey$bmonth)
+class1survey$bmonth<-ifelse(class1survey$bmonth == "February","2", class1survey$bmonth)
+class1survey$bmonth<-ifelse(class1survey$bmonth == "July","7", class1survey$bmonth)
+class1survey$bmonth<-ifelse(class1survey$bmonth == "May 21-report 5","5", class1survey$bmonth)
+class1survey$bmonth<-ifelse(class1survey$bmonth == "September ","9", class1survey$bmonth)
+
+
+class1survey$bday
+class1survey$bmonth
+```
+
+```{r}
+class(class1survey$bday)
+class(class1survey$bmonth)
+```
+```{r}
+class1survey$bday_n<-as.numeric(class1survey$bday)
+class1survey$bmonth_n<-as.numeric(class1survey$bmonth)
+
+
+class(class1survey$bday_n)
+class(class1survey$bmonth_n)
+
+
+summary(class1survey$bday_n)
+summary(class1survey$bmonth_n)
+
+median(class1survey$bday_n, na.rm=TRUE)
+median(class1survey$bmonth_n, na.rm=TRUE)
+
+mean(class1survey$bday_n, na.rm = TRUE)
+mean(class1survey$bmonth_n, na.rm = TRUE)
+```
+
+6. a. Create a new variable called bseason that gives the season according to Northern Meteorological season in which respondents were born (winter = 12/1 to 2/29, spring = 3/1 to 5/31, summer = 6/1 to 8/31, fall = 9/1 to 11/30). b. Using the table function, print a table of Seasons in the columns and bmonths in the rows that allows you to check that the coding is correct c. Sum the columns using the addmargins function to answer the question of how many classmates were born in each season? Include your answer in the code.
+
+a.
+```{r}
+a.
+class1survey <- class1survey %>%
+  mutate(bseason=case_when(bmonth_n %in% c(12,1,2) ~"winter",
+                           bmonth_n %in% c(3,4,5) ~"spring",
+                           bmonth_n %in% c(6,7,8) ~"summer",
+                           bmonth_n %in% c(9,10,11) ~"fall"))
+
+b.
+table(class1survey$bseason, class1survey$bmonth_n)
+
+c.
+tab<-addmargins(table(class1survey$bmonth_n, class1survey$bseason, useNA = "always"),1) 
+tab
+
+
+```
+
+c.
+ ~Fall = 4, spring = 9, summer = 8, winter = 8
+
+
+7. Pick your favorite variable or variables to analyze, come up with a question you want to answer with that variable or variables, generate the code, and provide an answer to your question. Describe what you did using comments (i.e. #’s).
+
+- highest_educ_level
+- How many classmates have each degree
+
+Ans: 20 students have a Bachelor's degree, 5 students have a master's degree and 4 students have a doctoral degree
+
+```{r}
+summary(class1survey$highest_educ_level)
+
+table(class1survey$highest_educ_level)
+```
+
+
+
+
